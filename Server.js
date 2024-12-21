@@ -71,34 +71,7 @@ app.post("/api/login", async (req, res) => {
     }
 });
 
-// api to update user details
-app.put('/api/updateUser/:user', async (req, res) => {
-    try {
-        const { user } = req.params;
-        const { password, imgUrl, gender } = req.body;
 
-        const existingUser = await UserModel.findOne({ user });
-        if (!existingUser) {
-            return res.status(404).json({ message: 'User not found.' });
-        }
-        // Update only the allowed fields
-        if (password) {
-            existingUser.password = await bcrypt.hash(password, 10); 
-        }
-        if (imgUrl) {
-            existingUser.imgUrl = imgUrl;
-        }
-        if (gender) {
-            existingUser.gender = gender;
-        }
-
-        const updatedUser = await existingUser.save();
-        res.status(200).json({ message: 'User updated successfully.', user: updatedUser });
-    } catch (error) {
-        console.error('Error updating user:', error);
-        res.status(500).json({ message: 'Internal server error.', error: error.message });
-    }
-});
 
 
 // api for get Users details
@@ -160,20 +133,7 @@ app.get("/api/getSpecificTask", async (req, res) => {
     }
 });
 
-// api for insert any User
-app.delete('/api/deleteUser/:user', async (req, res) => {
-    try {
-      const { user } = req.params; 
-      // Find and delete the user
-      const deletedUser = await UserModel.findOneAndDelete({ user });
-      if (!deletedUser) {
-        return res.status(404).json({ message: 'User not found' });
-      }
-      res.status(200).json({ message: 'User deleted successfully', deletedUser });
-    } catch (error) {
-      res.status(500).json({ message: 'Error deleting user', error: error.message });
-    }
-  });
+
 
 // api for insert any task
 app.delete('/api/tasks/:id', async (req, res) => {
